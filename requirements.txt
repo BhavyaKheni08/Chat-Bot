@@ -8,7 +8,6 @@ tiktoken
 langchain_community
 langchain_chroma
 langchain_huggingface
-datetime
 email
 smtplib
 requests
