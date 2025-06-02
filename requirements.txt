@@ -6,5 +6,3 @@ PyPDF2
 tiktoken
 langchain_community
 langchain_huggingface
-smtplib
-requests
