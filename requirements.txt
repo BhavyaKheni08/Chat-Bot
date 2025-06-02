@@ -6,3 +6,4 @@ openai
 PyPDF2
 tiktoken
 langchain_community
+
