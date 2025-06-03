@@ -6,8 +6,8 @@ from langchain_core.prompts import PromptTemplate
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.retrievers import BM25Retriever
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
+from langchain_huggingface import HuggingFaceEmbeddings 
 import pandas as pd
 from datetime import datetime
 import smtplib
@@ -82,16 +82,24 @@ def load_docs():
     return splitter.split_documents(all_docs)
 
 # Build retrievers
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.retrievers import BM25Retriever, EnsembleRetriever
+
 def build_retrievers(splits):
     embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L12-v2")
     vectorstore = Chroma.from_documents(documents=splits, embedding=embedding_model)
     vector_retriever = vectorstore.as_retriever()
+
     keyword_retriever = BM25Retriever.from_documents(splits)
 
-    return vectorstore.as_retriever(
+    combined_retriever = EnsembleRetriever(
         retrievers=[vector_retriever, keyword_retriever],
         weights=[0.7, 0.3]
     )
+
+    return combined_retriever
+
 
 def extract_info(user_input):
     updates = {}
