@@ -7,3 +7,4 @@ tiktoken
 langchain_community
 langchain_huggingface
 pypdf
+sentence-transformers
